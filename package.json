@@ -1,0 +1,27 @@
+{
+  "name": "back-end",
+  "version": "1.0.0 Beta",
+  "description": "Back-end",
+  "main": "connect.js",
+  "scripts": {
+    "start": "nodemon Server.js",
+    "test": "mocha __tests__/**/*.js --exit",
+    "testCarros": "mocha __tests__/carros/*.js --exit",
+    "testUsuarios": "mocha __tests__/usuarios/*.js --exit",
+    "testReservas": "mocha __tests__/reservas/*.js --exit",
+    "testHistorico": "mocha __tests__/historico/*.js --exit",
+    "testInfoCar": "mocha __tests__/carInfo/*.js --exit"
+  },
+  "author": "Fernando Nunes",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "mocha": "^9.2.0",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.0",
+    "supertest": "^6.2.2"
+  }
+}
