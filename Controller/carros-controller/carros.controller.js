@@ -77,11 +77,12 @@ const getIn_use = () => {
 const deleteCars = () => {
   return app.delete('/carros/:idCar', async (req, res) => {
     try {
-      const query = await mysql.mysql(`DELETE FROM carros WHERE idCarros = '${req.params.idCar}'`)
+      const query = await mysql.mysql(`DELETE FROM carros WHERE placa = '${req.params.idCar}'`)
       
       res.status(200).json({mensagem: 'Sucesso'})
     } catch (error) {
       res.status(400).json(error)
+      console.log(error)
     }
   })
 }

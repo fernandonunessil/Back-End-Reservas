@@ -17,17 +17,19 @@ describe('Carros teste de rotas', () => {
             modelo:`Frontier Geração ${Math.floor(Math.random() * 0x10000)}`,
             url:'https://images.noticiasautomotivas.com.br/img/f/volkswagen_gol_power_2007.jpg',
             kilometragem:20.000,
+            anoveiculo: Math.floor(Math.random() * 0x10),
         }
 
         const test = await request(app).post('/carros').send(params)
 
 
         assert.equal(200, test.status)
+        console.log(test.error);
     })
 
     it('DELETE /carros', async () => {
         const params = {
-            idCar:'INH6F71',
+            idCar:'MPN9915',
         }
 
         const test = await request(app).delete(`/carros/${params.idCar}`)

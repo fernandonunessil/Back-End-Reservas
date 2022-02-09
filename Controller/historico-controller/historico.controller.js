@@ -17,7 +17,7 @@ const postHistorico = () => {
   return app.post("/historico", async (req, res) => {
     try {
       const query = await mysql.mysql(
-        `INSERT INTO historico_de_uso (usuario, carro, data, km) VALUES ('${req.body.user}', '${req.body.car}', '${req.body.data}', '${req.body.km}')`
+        `INSERT INTO hisotrico (nome, modelo, placa, data, kilometragem, hora) VALUES ('${req.body.user}', '${req.body.car}', '${req.body.data}', '${req.body.km}')`
       );
       res.status(200).json(query);
     } catch (error) {
