@@ -9,8 +9,7 @@
     "testCarros": "mocha __tests__/carros/*.js --exit",
     "testUsuarios": "mocha __tests__/usuarios/*.js --exit",
     "testReservas": "mocha __tests__/reservas/*.js --exit",
-    "testHistorico": "mocha __tests__/historico/*.js --exit",
-    "testInfoCar": "mocha __tests__/carInfo/*.js --exit"
+    "testHistorico": "mocha __tests__/historico/*.js --exit"
   },
   "author": "Fernando Nunes",
   "license": "ISC",
