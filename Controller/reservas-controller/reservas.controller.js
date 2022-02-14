@@ -16,7 +16,6 @@ const getReservas = () => {
 const postReservas = () => {
   return app.post("/reservas", async (req, res) => {
     try {
-      console.log(req.body);
       const query = await mysql.mysql(
         `INSERT INTO reservas (data, nome, placa, hora, kilometragem) VALUES ('${req.body.datareserva}', '${req.body.usuario}', '${req.body.modelo.value}','${req.body.horareserva}', '${req.body.kilometragem}')`
       );

@@ -15,7 +15,8 @@ describe("Reservas teste de Rotas", () => {
         const params = {
             dataHora: '25/01/2022|15:08',
             user:'Fernando Nunes',
-            placa:'INH6F71'
+            placa:'INH6F71',
+            modelo: {label: 't-cross', value: 'INH6F72'}
         }
 
         const test = await request(app).post('/reservas').send(params)
