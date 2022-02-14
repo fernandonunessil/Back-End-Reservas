@@ -11,8 +11,6 @@ const reservasService = require("./Controller/reservas-controller/reservas.contr
 
 const historicoService = require("./Controller/historico-controller/historico.controller");
 
-const carInfoService = require('./Controller/carInfo-controller/carInfo.controller');
-
 const entregasService = require('./Controller/entregas-controller/entregas.controler');
 
 const saidasService = require('./Controller/saidas-controller/saidas.controller') ;
@@ -89,16 +87,6 @@ app.use(historicoService.postHistorico());
 //DELETE /historico 
 app.use(historicoService.deleteHistorico())
 
-// CarInfo Serviços
-
-//GET /carInfo
-app.use(carInfoService.getCarInfo());
-
-//POST /carInfo
-app.use(carInfoService.postCarInfo());
-
-//DELETE /carInfo
-app.use(carInfoService.deleteCarInfo());
 
 // Entregas Service 
 
