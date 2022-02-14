@@ -16,11 +16,13 @@ const getReservas = () => {
 const postReservas = () => {
   return app.post("/reservas", async (req, res) => {
     try {
+      console.log(req.body);
       const query = await mysql.mysql(
-        `INSERT INTO reservas (data, nome, placa, hora, kilometragem) VALUES ('${req.body.datareserva}', '${req.body.usuario}', '${req.body.modelo.value}','${req.body.horareserva}', '${req.body.kilometragem}   ')`
+        `INSERT INTO reservas (data, nome, placa, hora, kilometragem) VALUES ('${req.body.datareserva}', '${req.body.usuario}', '${req.body.modelo.value}','${req.body.horareserva}', '${req.body.kilometragem}')`
       );
       res.status(200).json({ mensagem: "Sucesso" });
     } catch (error) {
+      console.log(error);
       res.status(400).json(error);
     }
   });
@@ -30,7 +32,7 @@ const deleteReservas = () => {
   return app.delete("/reservas/:idReserva", async (req, res) => {
     try {
       const query = await mysql.mysql(
-        `DELETE FROM reservas WHERE idReservas = '${req.params.idReserva}'`
+        `DELETE FROM reservas WHERE idreserva = '${req.params.idReserva}'`
       );
       res.status(200).json({ mensagem: "Sucesso" });
     } catch (error) {

@@ -1,0 +1,628 @@
+openapi: 3.0.2
+servers:
+  - url: http://localhost:8847/
+info:
+  version: 1.0.11
+  title: API Docs
+tags:
+  - name: carros
+    description: Acessa todas as rotas do serviço carros
+  - name: reservas
+    description: Acessa todas as rotas do serviço reservas
+  - name: entregas
+    description: Controla a chegada dos veículos
+  - name: saida
+    description: Controla a saida dos veículos
+  - name: usuarios
+    description: Controla as rotas dos usuarios
+paths:
+  /carros:
+    get:
+      tags: 
+        - carros
+      summary: Pegar os carros cadastrados no banco de dados
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/carResponseGet'
+        '400':
+          description: Erro
+    post:
+      tags: 
+        - carros
+      summary: Adiconar um novo carro a frota de carros
+      requestBody:
+        description: url é colocada pelo própio usuario, para referenciar uma imagem para o carro
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/carPost'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '400': 
+          description: Erro desconhecido
+  /carros/livres:
+    get:
+      tags:
+        - carros
+      summary: Pega os carros que estão com o status livre
+      description: Retorna os carros que estão livres para o uso
+      x-swagger-router-controller: carros.controller.js
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/getlivreresponse'
+        '400':
+          description: Erro desconhecido
+  /carros/reservado:
+      get:
+        tags:
+          - carros
+        summary: Pega os carros que estão com o status 'reservado'
+        description: Retorna os carros que estão reservados
+        x-swagger-router-controller: carros.controller.js
+        responses:
+          '200':
+            description: Sucesso
+            content:
+              application/json: 
+                schema: 
+                  $ref: '#/components/schemas/getreservaresponse'
+          '400':
+            description: Erro desconhecido
+  /carros/em_uso:
+    get:
+      tags:
+        - carros
+      summary: Pega os carros que estão com o status 'reservado'
+      description: Retorna os carros que estão em uso 
+      x-swagger-router-controller: carros.controller.js
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/getemusoresponse'
+        '400':
+          description: Erro desconhecido
+  '/carros/{idCar}':
+    post:
+      tags: 
+        - carros
+      summary: Atualiza o status do carro se ele está [livre, em uso, reservado]
+      description: 'Rota para atualizar o status do veículo'
+      operationId: attStatusCar
+      x-swagger-router-controller: carros.controller.js
+      parameters:
+      - name: idCar
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/attStatusCar'
+      responses:
+        '400':
+          description: Erro desconhecido
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+    delete:
+      tags:
+        - carros
+      summary: Deleta um carro da frota
+      description: 'Documentação de uma API que deleta carro do estoque'
+      operationId: delete_car
+      x-swagger-router-controller: carros.controller.js
+      parameters:
+        - name: idCar
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        # - name: petId
+        #   in: path
+        #   description: Pet id to delete
+        #   required: true
+        #   schema:
+        #     type: integer
+        #     format: int64
+      responses:
+        '400':
+          description: Erro desconhecido
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response' 
+  /reservas:
+    get:
+      tags:
+        - reservas
+      summary: Retorna todas as reservas existentes
+      description: Retorna as reservas e suas propiedades 
+      operationId: getReservas
+      x-swagger-router-controller: reservas.controller.js
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseReserva"
+        '400':
+          description: Erro desconhecido
+    post:
+      tags: 
+        - reservas
+      summary: Faz uma reserva do carro selecionado
+      requestBody:
+        description: Reserva o carro selecionado, usando a data e hora que o mesmo vai ser retirado do patio para uso 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postReserva'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '400': 
+          description: Erro desconhecido
+  '/reservas/{idReserva}':
+    delete:
+      tags:
+        - reservas
+      summary: Deleta uma reserva do sistema
+      description: Cancela uma reserva de um carro
+      operationId: delete_reserva
+      x-swagger-router-controller: carros.controller.js
+      parameters:
+        - name: idReserva
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        # - name: petId
+        #   in: path
+        #   description: Pet id to delete
+        #   required: true
+        #   schema:
+        #     type: integer
+        #     format: int64
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+  /entregas:
+    post:
+      tags:
+        - entregas
+      summary: chegada de um veículo
+      x-swagger-router-controller: entregas.controler.js
+      description: Quando um carro chega, essa função muda o status do carro para livre
+      operationId: entregasPost
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '400':
+          description: Erro desconhecido
+      requestBody:
+        description:  Parametros necessarios para serem passados
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postEntregas'
+  /saida:
+    post:
+      tags:
+        - saida
+      summary: Marca a saida de um carro
+      description: Responsavel por controlar e mudar, o status dos carros para em uso 
+      operationId: saidas.controller.js
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Response'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/saidaPost'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/saidaPost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/saidaPost'
+        description: Created user object
+  /usuarios:
+    get:
+      tags:
+        - usuarios
+      summary: pega todos usuarios cadastrados
+      description: pega todos os usuarios cadastrados no banco de dados
+      x-swagger-router-controller: usuarios.controller.js
+      operationId: getUser
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getUser'
+            application/xml:
+                schema:
+                  $ref: '#/components/schemas/getUser'
+        default:
+          description: successful operation
+    post: 
+      tags: 
+        - usuarios
+      summary: cadastra usuario no banco de dados
+      description: faz um cadastro de um novo usuario no banco de dados
+      x-swagger-router-controller: usuarios.controller.js
+      operationId: postUser
+      responses: 
+        '200':
+          description: Sucesso
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postUser'
+  '/usuarios/{userId}':
+    delete:
+      tags:
+        - usuarios
+      summary: deleta um usuario
+      description: remove um usuario do banco de dados atraves de parametros na url
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: o cpf do usuario é o sei id no banco de dados
+          required: true
+          schema: 
+            type: string
+      responses:
+        '400':
+          description: Erro desconhecido
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response' 
+components:
+  schemas:
+    saidaPost:
+      x-swagger-router-model: saidas.controller.js
+      required:
+        - modelo
+        - motorista
+        - quilometragem
+        - data
+        - hora
+      properties:
+        modelo:
+          type: object
+          example: {label: 'T-cross', value: 'IFD9320'}
+        motorista:
+          type: string
+          format: base64
+          example: Fernando Nunes
+        quilometragem:
+          type: number
+          format: float
+          example: 23.564
+        data:
+          type: string
+          format: base64
+          example: 12/04/2022
+        hora:
+          type: string
+          example: 15:30
+      type: object
+    getUser:
+      properties:
+        cpf:
+          type: string
+          example: 123.456.789-10
+        cnh: 
+          type: string
+          example: 12345678910
+        nome: 
+          type: string
+          format: base64
+          example: Fernando Nunes
+    carPost:
+      required:
+        - placa
+        - anoveiculo
+        - modelo
+        - url
+        - quilometragem
+      properties:
+        placa:
+          type: string
+          format: binary
+          example: 'INH6F71'
+        anoveiculo:
+          type: string
+          # format: int32
+          example: '2022'
+        modelo:
+          type: string
+          format: byte
+          example: Land Rover Discover HSE
+        url: 
+          type: string
+          format: byte
+          example: https://quatrorodas.abril.com.br/wp-content/uploads/2021/03/Defender-90-frente.jpg?quality=70&strip=info
+        quilometragem:
+          type: string
+          example: 12.123
+    postUser:
+      required: 
+        - cpf
+        - nome
+        - cnh
+      properties:
+        cpf:
+          type: string
+          example: 987.654.321.27
+        nome:
+          type: string
+          format: base64
+          example: Fernando Nunes
+        cnh:
+          type: number
+          example: 12345678910
+    postEntregas:
+      required:
+        - modelo
+        - motorista
+        - entregaData
+        - horaEntrega
+        - quilometragem
+      properties:
+        modelo:
+          type: object
+          example: {label: 'T-cross', value: 'IFD9320'}
+        motorista:
+          type: string
+          format: base64
+          example: Fernando Nunes
+        entregaData:
+          type: string
+          format: base64
+          example: 21/04/2022
+        horaEntrega:
+          type: string
+          example: 15:30
+        quilometragem:
+          type: number
+          format: float
+          example: 12.450
+    postReserva:
+      required:
+        - nome
+        - quilometragem
+        - modelo
+        - dados
+        - hora
+      properties:
+        datareserva:
+          type: string
+          format: binary
+          example: '12/04/2022'
+        usuario:
+          type: string
+          # format: int32
+          example: 'Fernando Nunes'
+        modelo:
+          type: object
+          example: {value: 'INH6F72', modelo: 'Land Hover Defender'}
+        horareserva: 
+          type: string
+          format: byte
+          example: 12:35
+        kilometragem:
+          type: string
+          example: '12.849'
+    attStatusCar:
+      required:
+        - placa
+      properties:
+        stats:
+          type: string
+          format: binary
+          example: 'em uso'
+    getlivreresponse:
+      properties:
+        placa:
+          type: string
+          format: binary
+          example: 'placa do veículo'
+        ano:
+          type: number
+          format: float
+          example: 'ano do veículo'
+        modelo: 
+          type: string
+          format: binary
+          example: 'modelo do veículo'
+        url:
+          type: string
+          format: binary
+          example: 'url da imagem do veículo'
+        km:
+          type: number
+          format: float
+          example: 'quilometragem atual do veículo'
+        stats:
+          type: string
+          format: binary
+          example: 'livre'
+    getreservaresponse:
+      properties:
+        placa:
+          type: string
+          format: binary
+          example: 'placa do veículo'
+        ano:
+          type: number
+          format: float
+          example: 'ano do veículo'
+        modelo: 
+          type: string
+          format: binary
+          example: 'modelo do veículo'
+        url:
+          type: string
+          format: binary
+          example: 'url da imagem do veículo'
+        km:
+          type: number
+          format: float
+          example: 'quilometragem atual do veículo'
+        stats: 
+          type: string
+          format: binary
+          example: 'reservados'
+    getemusoresponse:
+      properties:
+        placa:
+          type: string
+          format: binary
+          example: 'placa do veículo'
+        ano:
+          type: number
+          format: float
+          example: 'ano do veículo'
+        modelo: 
+          type: string
+          format: binary
+          example: 'modelo do veículo'
+        url:
+          type: string
+          format: binary
+          example: 'url da imagem do veículo'
+        km:
+          type: number
+          format: float
+          example: 'quilometragem atual do veículo'
+        stats: 
+          type: string
+          format: binary
+          example: 'em uso'
+    responseReserva:
+      properties:
+        idreserva:
+          type: number
+          format: double
+          example: 'id da reserva'
+        nome:
+          type: string
+          format: byte
+          example: 'Nome de quem esta a reserva'
+        placa:
+          type: string
+          format: binary
+          example: 'Placa do carro reservado'
+        data:
+          type: string
+          format: binary
+          example: 'A data que o usuario vai pegar o carro'
+        hora: 
+          type: string
+          format: binary
+          example: 'A hora que o usuario vai pegar o carro'
+    Response:
+      properties:
+        mensagem:
+          type: string
+          format: byte
+          example: Sucesso
+    carResponseGet:
+      properties:
+        placa:
+          type: string
+          format: binary
+          example: IFD9320
+        ano: 
+          type: number
+          format: double
+        modelo:
+          type: string
+          format: binary
+          example: T-cross
+        url: 
+          type: string
+          format: binary
+          example: https://s2.glbimg.com/xsHfeZMVeVCFg4nSJ3ESr3l5TJg=/0x0:620x413/924x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_cf9d035bf26b4646b105bd958f32089d/internal_photos/bs/2020/V/8/H8hv5pSb2Wsy3aj7lLgQ/2020-08-06-46b4943d-32fe-4f7f-b9a5-6f83fc04920c.jpeg
+        km: 
+          type: number
+          format: float
+          example: 50.000
+        stats:
+          type: string
+          format: binary
+          example: livre
+  requestBodies:
+    UserArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/saidaPost'
+      description: List of user object

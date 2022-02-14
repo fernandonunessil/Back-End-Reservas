@@ -34,7 +34,7 @@ const attStatusCar = () => {
     try {
       const query = await mysql.mysql(`UPDATE carros SET stats = '${req.body.status}' WHERE placa = '${req.params.idCar}'`)
 
-      res.status(200).json({mensagem: 'Sucesso attstatus'})
+      res.status(200).json({mensagem: 'Sucesso'})
     } catch (error) {
       res.status(400).json(error)
     } 
